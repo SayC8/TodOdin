@@ -69,7 +69,7 @@ create_task :: proc(text: string, tasks: ^[dynamic]Task) {
     display_tasks(tasks)
 }
 
-mark_done :: proc(index: int, tasks: ^[dynamic]Task) {
+toggle_done :: proc(index: int, tasks: ^[dynamic]Task) {
     if index < 0 || index >= len(tasks) {
         fmt.printfln(
             "%sError: Index %d is invalid.%s",
@@ -80,7 +80,7 @@ mark_done :: proc(index: int, tasks: ^[dynamic]Task) {
         return
     }
 
-    tasks[index].done = true
+    tasks[index].done = !tasks[index].done
     save_tasks(tasks^)
     fmt.printfln(
         "%sTask %d marked as done%s.",
@@ -210,7 +210,7 @@ main :: proc() {
             return
         }
         idx, ok := strconv.parse_int(os.args[2])
-        if ok do mark_done(idx - 1, &tasks)
+        if ok do toggle_done(idx - 1, &tasks)
     case "delete":
         if len(os.args) < 3 {
             fmt.println("Error: Please provide the task index.")
